@@ -1,0 +1,44 @@
+{
+  "name": "translime-plugin-static-server",
+  "version": "1.0.0",
+  "description": "a plugin example",
+  "license": "MIT",
+  "private": true,
+  "main": "./dist/index.umd.js",
+  "module": "./dist/index.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.umd.js"
+    }
+  },
+  "files": [
+    "**"
+  ],
+  "scripts": {
+    "dev": "vite build -c ui.vite.config.js --watch",
+    "build:plugin": "vite build",
+    "build:ui": "vite build -c ui.vite.config.js",
+    "build": "yarn build:plugin && yarn build:ui"
+  },
+  "devDependencies": {
+    "eslint": "7.32.0",
+    "eslint-config-airbnb-base": "14.2.1",
+    "eslint-import-resolver-alias": "^1.1.2",
+    "eslint-plugin-import": "2.25.2",
+    "eslint-plugin-vue": "7.20.0",
+    "vite": "^2.7.2",
+    "vite-plugin-vue2": "^1.9.3",
+    "vue-template-compiler": "^2.6.14"
+  },
+  "plugin": {
+    "title": "static server",
+    "description": "开启一个临时的静态文件服务器。",
+    "icon": "./icon.png",
+    "ui": "dist/ui.umd.js"
+  },
+  "dependencies": {
+    "detect-port": "^1.3.0",
+    "serve-handler": "^6.1.3"
+  }
+}
