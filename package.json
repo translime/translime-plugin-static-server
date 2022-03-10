@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "a plugin example",
   "license": "MIT",
-  "private": true,
   "main": "./dist/index.umd.js",
   "module": "./dist/index.es.js",
   "exports": {
@@ -13,7 +12,8 @@
     }
   },
   "files": [
-    "**"
+    "dist",
+    "src"
   ],
   "scripts": {
     "dev": "vite build -c ui.vite.config.js --watch",
@@ -34,7 +34,7 @@
   "plugin": {
     "title": "static server",
     "description": "开启一个临时的静态文件服务器。",
-    "icon": "./icon.png",
+    "icon": "./src/icon.png",
     "ui": "dist/ui.umd.js"
   },
   "dependencies": {

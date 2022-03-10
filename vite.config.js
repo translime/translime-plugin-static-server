@@ -19,7 +19,7 @@ const config = {
       safari10: false,
     },
     lib: {
-      entry: 'index.js',
+      entry: 'src/index.js',
       name: 'plugin',
       fileName: (format) => `index.${format}.js`,
     },

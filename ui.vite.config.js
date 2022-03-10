@@ -22,7 +22,7 @@ const config = {
       safari10: false,
     },
     lib: {
-      entry: 'ui.vue',
+      entry: 'src/ui.vue',
       name: 'translime-plugin-static-server', // 需要指定一个唯一 id
       fileName: (format) => `ui.${format}.js`,
     },
