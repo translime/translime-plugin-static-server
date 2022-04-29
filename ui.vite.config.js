@@ -23,7 +23,7 @@ const config = {
     },
     lib: {
       entry: 'src/ui.vue',
-      name: 'translime-plugin-static-server', // 需要指定一个唯一 id
+      name: `translime-plugin-static-server${process.env.NODE_ENV === 'production' ? '' : '@dev'}`, // 需要指定一个唯一 id
       fileName: (format) => `ui.${format}.js`,
     },
     cssCodeSplit: true,

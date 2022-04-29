@@ -6,11 +6,13 @@
         :key="server.port"
         cols="3"
       >
-        <v-card>
+        <v-card class="fill-height d-flex flex-column">
           <v-card-text>
             <div>{{ server.path }}</div>
             <div>:{{ server.port }}</div>
           </v-card-text>
+
+          <v-spacer />
 
           <v-card-actions>
             <v-spacer />
@@ -67,7 +69,7 @@ export default {
     onServerClose() {
       window.electron.ipcRenderer.receive('ipc-reply', ({ type, data }) => {
         if (type === 'server-closed@translime-plugin-static-server') {
-          this.servers = this.servers.filter(server => +server.port !== +data.port);
+          this.servers = this.servers.filter((server) => +server.port !== +data.port);
         }
       });
     },

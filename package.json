@@ -19,7 +19,8 @@
     "dev": "vite build -c ui.vite.config.js --watch",
     "build:plugin": "vite build",
     "build:ui": "vite build -c ui.vite.config.js",
-    "build": "yarn build:plugin && yarn build:ui"
+    "build": "yarn build:plugin && yarn build:ui",
+    "build:test": "yarn build:plugin && yarn build:ui --mode development"
   },
   "devDependencies": {
     "eslint": "7.32.0",
