@@ -27,6 +27,42 @@
         </v-card>
       </v-col>
     </v-row>
+
+    <template v-if="historyServers.length">
+      <v-subheader class="select-none">
+        <span>历史记录</span>
+        <v-btn
+        class="ml-2"
+          x-small
+          outlined
+          @click="clearHistory"
+        >
+          清空
+        </v-btn>
+      </v-subheader>
+
+      <v-row>
+        <v-col
+          v-for="server in historyServers"
+          :key="server.path"
+          cols="3"
+        >
+          <v-tooltip top>
+            <template v-slot:activator="{ on, attrs }">
+            <v-card
+              link
+              v-bind="attrs"
+              v-on="on"
+              @click="openServerIpc(server.path)"
+             >
+              <v-card-text class="text-one-line select-none">{{ server.path }}</v-card-text>
+            </v-card>
+            </template>
+            <span>{{ server.path }}</span>
+          </v-tooltip>
+        </v-col>
+      </v-row>
+    </template>
   </v-container>
 </template>
 
@@ -42,6 +78,7 @@ export default {
 
   data: () => ({
     servers: [],
+    historyServers: [],
   }),
 
   methods: {
@@ -50,15 +87,19 @@ export default {
         properties: ['openDirectory'],
       });
       if (!result.data.canceled) {
-        const port = await window.electron.ipcRenderer.invoke('ipc-fn', {
-          type: 'new-server@translime-plugin-static-server',
-          args: [result.data.filePaths[0]],
-        });
-        this.servers.push({
-          port: +port,
-          path: result.data.filePaths[0],
-        });
+        await this.openServerIpc(result.data.filePaths[0]);
       }
+    },
+    async openServerIpc(serverPath) {
+      const port = await window.electron.ipcRenderer.invoke('ipc-fn', {
+        type: 'new-server@translime-plugin-static-server',
+        args: [serverPath],
+      });
+      this.servers.push({
+        port: +port,
+        path: serverPath,
+      });
+      this.addHistoryServers(serverPath);
     },
     async closeServer(port) {
       await window.electron.ipcRenderer.invoke('ipc-fn', {
@@ -85,21 +126,57 @@ export default {
         args: [],
       });
     },
+    addHistoryServers(serverPath) {
+      const ind = this.historyServers.findIndex((server) => server.path === serverPath);
+      if (ind === -1) {
+        this.historyServers.push({
+          path: serverPath,
+          count: 1,
+        });
+      } else {
+        this.historyServers[ind].count += 1;
+      }
+      this.historyServers = this.historyServers.sort((a, b) => b.count - a.count);
+      if (this.historyServers.length > 8) {
+        this.historyServers.pop();
+      }
+      localStorage.setItem('translime-plugin-static-server:history', JSON.stringify(this.historyServers));
+    },
+    getHistoryServers() {
+      try {
+        const historyServers = JSON.parse(localStorage.getItem('translime-plugin-static-server:history') || '[]');
+        this.historyServers = historyServers.sort((a, b) => b.count - a.count);
+      } catch (err) {
+        this.historyServers = [];
+      }
+    },
+    clearHistory() {
+      this.historyServers = [];
+      localStorage.removeItem('translime-plugin-static-server:history');
+    },
   },
 
   mounted() {
     this.getServers();
     this.onServerClose();
+    this.getHistoryServers();
   },
 };
 </script>
 
 <style scoped>
-.plugin-main {
-}
-
 .server-card {
   height: 100%;
   min-height: 120px;
+}
+
+.text-one-line {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.select-none {
+  user-select: none;
 }
 </style>
