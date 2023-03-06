@@ -1,6 +1,6 @@
-import http from 'http';
-import serveHandler from 'serve-handler';
-import detectPort from 'detect-port';
+const http = require('node:http');
+const serveHandler = require('serve-handler');
+const detectPort = require('detect-port');
 
 const id = 'translime-plugin-static-server';
 let currentPort = 0;
@@ -26,13 +26,13 @@ const closeAllServer = () => {
 };
 
 // 禁用时执行
-export const pluginWillUnload = () => {
+const pluginWillUnload = () => {
   closeAllServer();
 };
 
 // 插件上下文菜单
 // https://www.electronjs.org/zh/docs/latest/api/menu-item
-export const pluginMenu = [
+const pluginMenu = [
   {
     id: 'close-all',
     label: '关闭所有服务',
@@ -43,7 +43,7 @@ export const pluginMenu = [
 ];
 
 // ipc 定义
-export const ipcHandlers = [
+const ipcHandlers = [
   {
     type: 'new-server',
     handler: ({ sendToClient }) => async (path) => {
@@ -96,3 +96,9 @@ export const ipcHandlers = [
     },
   },
 ];
+
+module.exports = {
+  pluginWillUnload,
+  pluginMenu,
+  ipcHandlers,
+};

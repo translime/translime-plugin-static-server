@@ -29,17 +29,17 @@
     </v-row>
 
     <template v-if="historyServers.length">
-      <v-subheader class="select-none">
+      <div class="select-none text-subtitle-1 my-2">
         <span>历史记录</span>
         <v-btn
-        class="ml-2"
+          class="ml-2"
           x-small
           outlined
           @click="clearHistory"
         >
           清空
         </v-btn>
-      </v-subheader>
+      </div>
 
       <v-row>
         <v-col
@@ -47,19 +47,15 @@
           :key="server.path"
           cols="3"
         >
-          <v-tooltip top>
-            <template v-slot:activator="{ on, attrs }">
-            <v-card
-              link
-              v-bind="attrs"
-              v-on="on"
-              @click="openServerIpc(server.path)"
-             >
-              <v-card-text class="text-one-line select-none">{{ server.path }}</v-card-text>
-            </v-card>
-            </template>
-            <span>{{ server.path }}</span>
-          </v-tooltip>
+          <v-btn
+            class="text-one-line select-none"
+            variant="tonal"
+            block
+            @click="openServerIpc(server.path)"
+          >
+            {{ server.path }}
+            <v-tooltip activator="parent" :text="server.path" location="top"></v-tooltip>
+          </v-btn>
         </v-col>
       </v-row>
     </template>

@@ -1,35 +1,33 @@
-import { builtinModules } from 'module';
+import vue from '@vitejs/plugin-vue';
+import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 
 /**
  * @type {import('vite').UserConfig}
  * @see https://vitejs.dev/config/
  */
 const config = {
+  plugins: [
+    vue(),
+    cssInjectedByJsPlugin(),
+  ],
   envDir: process.cwd(),
   build: {
-    sourcemap: false,
+    minify: false,
+    sourcemap: 'inline',
     target: 'node14',
     outDir: './dist',
-    assetsDir: '.',
-    terserOptions: {
-      ecma: 2021,
-      compress: {
-        passes: 2,
-      },
-      safari10: false,
-    },
     lib: {
-      entry: 'src/index.js',
-      name: 'plugin',
-      fileName: (format) => `index.${format}.js`,
+      entry: 'src/ui.vue',
+      name: 'translime-plugin-static-server', // 需要指定一个唯一 id
+      formats: ['esm'],
+      fileName: (format) => `ui.${format}.js`,
     },
-    emptyOutDir: true,
     rollupOptions: {
       external: [
-        'http-server',
-        ...builtinModules,
+        'vue',
       ],
     },
+    emptyOutDir: true,
   },
 };
 
