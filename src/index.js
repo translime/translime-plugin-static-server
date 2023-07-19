@@ -1,8 +1,9 @@
-const http = require('node:http');
-const serveHandler = require('serve-handler');
-const detectPort = require('detect-port');
+import http from 'http';
+import serveHandler from 'serve-handler';
+import detectPort from 'detect-port';
 
 const id = 'translime-plugin-static-server';
+const pluginWin = global?.childWins?.[`plugin-window-${id}`] || global.mainStore.getChildWin(`plugin-window-${id}`);
 let currentPort = 0;
 const servers = {};
 
@@ -62,7 +63,7 @@ const ipcHandlers = [
       server.on('close', () => {
         sendToClient(`server-closed@${id}`, {
           port,
-        }, global.childWins[`plugin-window-${id}`]);
+        }, pluginWin);
       });
       server.listen(currentPort);
       servers[+currentPort] = {
@@ -97,7 +98,7 @@ const ipcHandlers = [
   },
 ];
 
-module.exports = {
+export default {
   pluginWillUnload,
   pluginMenu,
   ipcHandlers,
